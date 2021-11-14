@@ -5,20 +5,44 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+## Ruby version
 
-* System dependencies
+Make sure you have a fresh version of Ruby, at least 2.7.4
 
-* Configuration
+## Install Postgres
 
-* Database creation
+**Postgres Config**
 
-* Database initialization
+```bash
+psql postgres
+```
 
-* How to run the test suite
+Inside psql console:
 
-* Services (job queues, cache servers, search engines, etc.)
+```sql
+CREATE ROLE postgres SUPERUSER;
+ALTER ROLE postgres PASSWORD 'secret';
+ALTER ROLE postgres WITH LOGIN;
+```
 
-* Deployment instructions
+## Try it!
 
-* ...
+Simply run:
+
+```bash
+rails s
+```
+
+## Database creation
+
+Simply run:
+
+```bash
+rails db:create
+```
+
+## Database initialization
+
+```bash
+rails db:migrate
+```
