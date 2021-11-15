@@ -10,7 +10,10 @@ Rails.application.routes.draw do
                sessions: 'auth/sessions'
              }
   resources :users
-  resources :subjects
-  resources :assignments
+  resources :subjects do
+    resources :assignments
+    resources :grades
+    resources :advices
+  end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

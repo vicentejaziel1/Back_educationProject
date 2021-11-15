@@ -1,5 +1,5 @@
 class AddSubjectIdToAssignment < ActiveRecord::Migration[5.2]
   def change
-    add_column :assignments, :subject_id, :numeric
+    add_reference :assignments, :subject, foreign_key: true
   end
 end

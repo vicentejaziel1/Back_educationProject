@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_10_002611) do
+ActiveRecord::Schema.define(version: 2021_11_15_203458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "advices", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_advices_on_created_by_id"
+  end
 
   create_table "assignments", force: :cascade do |t|
     t.string "title"
@@ -22,7 +31,8 @@ ActiveRecord::Schema.define(version: 2021_11_10_002611) do
     t.decimal "percentage"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "subject_id"
+    t.bigint "subject_id"
+    t.index ["subject_id"], name: "index_assignments_on_subject_id"
   end
 
   create_table "grades", force: :cascade do |t|
@@ -30,14 +40,28 @@ ActiveRecord::Schema.define(version: 2021_11_10_002611) do
     t.text "comments"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "subject_id"
-    t.decimal "student_id"
+    t.bigint "subject_id"
+    t.bigint "student_id"
+    t.bigint "assignment_id"
+    t.boolean "evaluated", default: false
+    t.index ["assignment_id"], name: "index_grades_on_assignment_id"
+    t.index ["student_id"], name: "index_grades_on_student_id"
+    t.index ["subject_id"], name: "index_grades_on_subject_id"
   end
 
   create_table "jwt_blacklists", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp", null: false
     t.index ["jti"], name: "index_jwt_blacklists_on_jti"
+  end
+
+  create_table "owner_subjects", force: :cascade do |t|
+    t.bigint "owner_id"
+    t.bigint "subject_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_owner_subjects_on_owner_id"
+    t.index ["subject_id"], name: "index_owner_subjects_on_subject_id"
   end
 
   create_table "professors", force: :cascade do |t|
@@ -66,7 +90,8 @@ ActiveRecord::Schema.define(version: 2021_11_10_002611) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "professor_id"
+    t.bigint "professor_id"
+    t.index ["professor_id"], name: "index_subjects_on_professor_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -84,4 +109,8 @@ ActiveRecord::Schema.define(version: 2021_11_10_002611) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "assignments", "subjects"
+  add_foreign_key "grades", "students"
+  add_foreign_key "grades", "subjects"
+  add_foreign_key "subjects", "professors"
 end

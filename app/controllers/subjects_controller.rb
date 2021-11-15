@@ -1,22 +1,22 @@
 class SubjectsController < ApplicationController
-	before_action :set_professor, only: [:index, :create]
+	before_action :set_owner, only: [:index, :create]
   before_action :set_subject, only: [:show, :update, :destroy]
 
   # GET /subjects
   def index
-    @subjects = Subject.where(professor_id: @professor)
-    render json: @subjects, root: root
+    @subjects = @owner.subjects
+    render json: @subjects
   end
 
   # GET /professor/professor_id/subjects/1
   def show
-    render json: @subject, root: root
+    render json: @subject
   end
 
   # POST /professor/professor_id/subjects
   def create
     @subject = Subject.new(subject_params)
-    @subject.professor = Professor.find_by_id(@professor)
+    @subject.professor = @owner
 
     if @subject.save
       render json: @subject, status: :created
@@ -40,8 +40,8 @@ class SubjectsController < ApplicationController
 
   private
 
-  def set_professor
-    #@professor = Current.user.owner
+  def set_owner
+    @owner = current_user.owner
   end
 
   def set_subject
@@ -52,14 +52,7 @@ class SubjectsController < ApplicationController
   def subject_params
     params
       .require(:subject)
-      .permit(:name,
-              :lastname,
-              :matriname,
-              :relationship,
-              :email,
-              :phone_number,
-              :phone_number_extension,
-              :mobile_number,
-              :receives_email)
+      .permit(:title,
+              :description)
   end
 end

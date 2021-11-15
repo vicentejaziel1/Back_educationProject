@@ -1,20 +1,23 @@
 class AssignmentsController < ApplicationController
+  before_action :set_subject, only: [:index, :create]
   before_action :set_assignment, only: [:show, :update, :destroy]
 
   # GET /assignments
   def index
     @assignments = Assignment.all
-    render json: @assignments, root: root
+    render json: @assignments
   end
 
   # GET /assignments/1
   def show
-    render json: @assignment, root: root
+    render json: @assignment
   end
 
   # POST /assignments
   def create
     @assignment = Assignment.new(assignment_params)
+
+    @assignment.subject = @subject
 
     if @assignment.save
       render json: @assignment, status: :created
@@ -38,6 +41,10 @@ class AssignmentsController < ApplicationController
 
   private
 
+  def set_subject
+    @subject = Subject.find_by_id(params[:subject_id])
+  end
+
   def set_assignment
     @assignment = Assignment.find_by_id(params[:id])
   end
@@ -46,14 +53,9 @@ class AssignmentsController < ApplicationController
   def assignment_params
     params
       .require(:assignment)
-      .permit(:name,
-              :lastname,
-              :matriname,
-              :relationship,
-              :email,
-              :phone_number,
-              :phone_number_extension,
-              :mobile_number,
-              :receives_email)
+      .permit(:title,
+              :description,
+              :percentage,
+              :limit_date)
   end
 end
