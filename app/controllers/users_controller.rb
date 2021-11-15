@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-	 before_action :set_user, only: [:show, :update, :destroy]
+	before_action :set_user, only: [:show, :update, :destroy]
 
 	# GET /users
   def index
@@ -51,7 +51,5 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:email,
                                  :password)
-  end
-
   end
 end
