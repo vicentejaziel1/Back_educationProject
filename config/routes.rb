@@ -11,7 +11,11 @@ Rails.application.routes.draw do
              }
   resources :users
   resources :subjects do
-    resources :assignments 
+    resources :assignments do
+      member do
+        get 'grades', to: 'assignments#grades'
+      end
+    end
     resources :grades
     resources :advices
   end
