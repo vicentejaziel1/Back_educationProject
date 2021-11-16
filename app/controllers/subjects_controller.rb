@@ -41,7 +41,7 @@ class SubjectsController < ApplicationController
   private
 
   def set_owner
-    @owner = current_user.owner
+    @owner = current_user
   end
 
   def set_subject

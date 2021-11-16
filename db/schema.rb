@@ -40,13 +40,13 @@ ActiveRecord::Schema.define(version: 2021_11_15_203458) do
     t.text "comments"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "subject_id"
-    t.bigint "student_id"
     t.bigint "assignment_id"
+    t.bigint "user_id"
+    t.bigint "subject_id"
     t.boolean "evaluated", default: false
     t.index ["assignment_id"], name: "index_grades_on_assignment_id"
-    t.index ["student_id"], name: "index_grades_on_student_id"
     t.index ["subject_id"], name: "index_grades_on_subject_id"
+    t.index ["user_id"], name: "index_grades_on_user_id"
   end
 
   create_table "jwt_blacklists", force: :cascade do |t|
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 2021_11_15_203458) do
   end
 
   add_foreign_key "assignments", "subjects"
-  add_foreign_key "grades", "students"
   add_foreign_key "grades", "subjects"
+  add_foreign_key "grades", "users"
   add_foreign_key "subjects", "professors"
 end

@@ -39,6 +39,13 @@ class AssignmentsController < ApplicationController
     @assignment.destroy
   end
 
+  #GET /assignments/1/grades
+  def grades
+    @grades = @subject.grades
+
+    render json: @grades
+  end
+
   private
 
   def set_subject

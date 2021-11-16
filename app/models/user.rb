@@ -6,6 +6,7 @@ class User < ApplicationRecord
          jwt_revocation_strategy: JwtBlacklist
 
   belongs_to :owner, polymorphic: true
-  has_many :owner_subjects
+  has_many :owner_subjects, foreign_key: :owner_id
   has_many :subjects, through: :owner_subjects
+  has_many :grades
 end

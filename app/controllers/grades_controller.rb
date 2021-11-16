@@ -1,20 +1,60 @@
 class GradesController < ApplicationController
+  before_action :set_subject, only: [:index, :create, :submit]
   before_action :set_grade, only: [:show, :update, :destroy]
 
   # GET /grades
   def index
-    @grades = Grade.all
-    render json: @grades, root: root
+    puts current_user
+    students = @subject.users.where(owner_type:'Student')
+
+    @grades = students.map do |student|
+      {
+        id: student.id,
+        name: student.owner.name + ' ' + student.owner.lastname,
+        grades: @subject.assignments.map do |assignment|
+                  {
+                    assignment_id: assignment.id,
+                    title: assignment.title,
+                    note: assignment.grades.where(user_id: student.id)&.first&.note
+                  }
+                end
+      }
+    end
+    render json: @grades
   end
 
   # GET /grades/1
   def show
-    render json: @grade, root: root
+    render json: @grade
   end
 
   # POST /grades
-  def create
+  # def create
+  #   @grade = Grade.new(grade_params)
+  #   @grade.student = current_user
+
+  #   if @grade.save
+  #     render json: @grade, status: :created
+  #   else
+  #     render json: @grade.errors, status: :unprocessable_entity
+  #   end
+  # end
+
+  # PATCH/PUT /grades/1
+  def update
+    if @grade.update(grade_params)
+      render json: @grade
+    else
+      render json: @grade.errors, status: :unprocessable_entity
+    end
+  end
+
+  def submit
+    assignment = Assignment.find_by_id(params[:assignment_id])
     @grade = Grade.new(grade_params)
+    @grade.user_id = current_user.id
+    @grade.assignment_id = assignment.id
+    @grade.subject_id = @subject.id
 
     if @grade.save
       render json: @grade, status: :created
@@ -23,8 +63,8 @@ class GradesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /grades/1
-  def update
+  def evaluate
+    @grade.evaluated = true
     if @grade.update(grade_params)
       render json: @grade
     else
@@ -38,6 +78,10 @@ class GradesController < ApplicationController
 
   private
 
+  def set_subject
+    @subject = Subject.find_by_id(params[:subject_id])
+  end
+
   def set_grade
     @grade = Grade.find_by_id(params[:id])
   end
@@ -46,14 +90,7 @@ class GradesController < ApplicationController
   def grade_params
     params
       .require(:grade)
-      .permit(:name,
-              :lastname,
-              :matriname,
-              :relationship,
-              :email,
-              :phone_number,
-              :phone_number_extension,
-              :mobile_number,
-              :receives_email)
+      .permit(:note,
+              :comments)
   end
 end
