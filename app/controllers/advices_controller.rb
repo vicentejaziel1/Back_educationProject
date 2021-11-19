@@ -16,8 +16,6 @@ class AdvicesController < ApplicationController
     def create
         @advices = Advice.new(advice_params)
 
-        @advice. = @user
-
         if @advice.save
             render json: @advice, status: :created
         else
