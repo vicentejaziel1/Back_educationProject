@@ -1,6 +1,5 @@
 class AdvicesController < ApplicationController
-    before_action : set_users, only: [:index, :create, :submit]
-    before_action : set_advice, only: [:show, :update, :destroy]
+    before_action :set_advice, only: [:show, :update, :destroy]
 
     #GET /advices
     def index
@@ -17,7 +16,7 @@ class AdvicesController < ApplicationController
     def create
         @advices = Advice.new(advice_params)
 
-        @advice.user = @user
+        @advice. = @user
 
         if @advice.save
             render json: @advice, status: :created
@@ -54,8 +53,6 @@ class AdvicesController < ApplicationController
         params
           .require(:advice)
           .permit(:title,
-                  :content,
-                  :id_user,
-                  :date_time)
+                  :content)
       end
 end

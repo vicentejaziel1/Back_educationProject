@@ -9,4 +9,5 @@ class User < ApplicationRecord
   has_many :owner_subjects, foreign_key: :owner_id
   has_many :subjects, through: :owner_subjects
   has_many :grades
+  has_many :advices
 end
