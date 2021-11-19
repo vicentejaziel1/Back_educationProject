@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       end
     end
     resources :grades
-    resources :advices
+   # resources :advices
   end
 
   post '/subjects/:subject_id/assignments/:assignment_id/submit', to: 'grades#submit'
